@@ -81,7 +81,7 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
+    return all(row.count(EMPTY) == 0 for row in board) or bool(winner(board))
 
 
 def utility(board):

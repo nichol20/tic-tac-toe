@@ -60,8 +60,22 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    diagonals = [[(0, 0), (1, 1), (2, 2)], [(0, 2), (1, 1), (2, 0)]]
 
+    for player in [X, O]:
+        for i in range(3):
+            if all(board[i][j] == player for j in range(3)):
+                return player
+            if all(board[j][i] == player for j in range(3)):
+                return player
+
+    for diagonal in diagonals:
+        if all(board[i][j] == X for i, j in diagonal):
+            return X
+        if all(board[i][j] == O for i, j in diagonal):
+            return O
+
+    return None
 
 def terminal(board):
     """

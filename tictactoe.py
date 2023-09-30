@@ -47,12 +47,12 @@ def result(board, action):
     """
     
     new_board = copy.deepcopy(board)
-    row, col = action
+    i, j = action
 
-    if new_board[row][col] != EMPTY:
+    if new_board[i][j] != EMPTY:
         raise Exception("Action must be on an empty field")
 
-    new_board[row][col] = player(board)
+    new_board[i][j] = player(board)
     return new_board
 
 
@@ -101,4 +101,41 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    if terminal(board):
+        return None
+    
+    player_turn = player(board)
+    if player_turn == X:
+        return max_value(board)[1]
+    if player_turn == O:
+        return min_value(board)[1]
+
+def max_value(board):
+    if terminal(board):
+        return utility(board), None
+    
+    v = -math.inf
+    optimal_action = None
+
+    for action in actions(board):
+        min_value_result = min_value(result(board, action))[0]
+        if min_value_result > v:
+            v = min_value_result
+            optimal_action = action
+
+    return v, optimal_action
+
+def min_value(board):
+    if terminal(board):
+        return utility(board), None
+    
+    v = math.inf
+    optimal_action = None
+
+    for action in actions(board):
+        max_value_result = max_value(result(board, action))[0]
+        if max_value_result < v:
+            v = max_value_result
+            optimal_action = action
+
+    return v, optimal_action

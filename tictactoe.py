@@ -64,8 +64,10 @@ def winner(board):
 
     for player in [X, O]:
         for i in range(3):
+            # check rows
             if all(board[i][j] == player for j in range(3)):
                 return player
+            # check columns
             if all(board[j][i] == player for j in range(3)):
                 return player
 
@@ -105,37 +107,49 @@ def minimax(board):
         return None
     
     player_turn = player(board)
+    # start recursion
     if player_turn == X:
         return max_value(board)[1]
     if player_turn == O:
         return min_value(board)[1]
 
-def max_value(board):
+
+def max_value(board, min_v=math.inf):
     if terminal(board):
         return utility(board), None
     
-    v = -math.inf
+    max_v = -math.inf
     optimal_action = None
 
+    # loop through the available options to find the maximum value
     for action in actions(board):
-        min_value_result = min_value(result(board, action))[0]
-        if min_value_result > v:
-            v = min_value_result
+        # Alpha-Beta Pruning
+        if max_v >= min_v:
+            break 
+
+        min_value_result = min_value(result(board, action), max_v)[0]
+        if min_value_result > max_v:
+            max_v = min_value_result
             optimal_action = action
 
-    return v, optimal_action
+    return max_v, optimal_action
 
-def min_value(board):
+def min_value(board, max_v=-math.inf):
     if terminal(board):
         return utility(board), None
     
-    v = math.inf
+    min_v = math.inf
     optimal_action = None
 
+    # loop through the available options to find the minimum value
     for action in actions(board):
-        max_value_result = max_value(result(board, action))[0]
-        if max_value_result < v:
-            v = max_value_result
+        # Alpha-Beta Pruning
+        if min_v <= max_v:
+            break 
+
+        max_value_result = max_value(result(board, action), min_v)[0]
+        if max_value_result < min_v:
+            min_v = max_value_result
             optimal_action = action
 
-    return v, optimal_action
+    return min_v, optimal_action

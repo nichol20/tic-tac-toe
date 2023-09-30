@@ -27,12 +27,18 @@ def player(board):
 
     return X if x_count <= o_count else O
 
-
 def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
-    raise NotImplementedError
+    actions = set()
+
+    for i, row in enumerate(board):
+        for j, cell in enumerate(row):
+            if cell == EMPTY:
+                actions.add((i, j))
+                
+    return actions
 
 def result(board, action):
     """
